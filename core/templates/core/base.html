@@ -1,0 +1,172 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}HotelEasy{% endblock %}</title>
+    
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    
+    <!-- Import materialize.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <!-- Import FontAwesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+        integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+        crossorigin="anonymous"></script>
+    
+    <!-- Import Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Import jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    
+    <!-- Import custom JavaScript -->
+    <script src="{% static 'core/layout.js' %}"></script>
+    
+    <!-- Import custom CSS -->
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+    
+    <!-- Import favicon -->
+    <link rel="icon" type="image/png" href="{% static 'core/images/favicon.png' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    {% block styles %}
+    {% endblock %}
+</head>
+
+<body>
+    <!-- Barra de navegación -->
+    <nav class="py-6 px-6 flex justify-between items-center bg-gray-800">
+        <a href="/" class="text-xl font-semibold">HotelEasy</a>
+
+        <!-- Botón del menú desplegable -->
+        <button class="lg:hidden focus:outline-none">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+
+        <!-- Contenedor de los elementos del menú -->
+        <div class="space-x-6 hidden lg:flex lg:items-center lg:ml-auto">
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'admin:index'  %}" class="text-lg font-semibold hover:text-gray-500">Administrar</a>
+                {% endif %}
+                
+                {% if perms.rooms.add_Habitacion %}
+                    <a href="{% url 'habitaciones:nuevo'  %}" class="text-lg font-semibold hover:text-gray-500">Agregar Habitacion</a>
+                {% endif %}
+                {% if perms.rooms.delete_Habitacion %}
+                    <a href="{% url 'habitaciones:eliminar_habitacion'  %}" class="text-lg font-semibold hover:text-gray-500">Eliminar Habitacion</a>
+                {% endif %}
+
+                <span class="text-gray-500">{{ request.user.username }}</span>
+                
+                <a href="{% url 'habitacion:vista_reservas' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-blue-700">Mis Reservas</a>
+
+                <a href="{% url 'core:modificar' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-blue-700">Usuario</a>
+                <form action="{% url 'core:logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit-close" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-red-700">Cerrar sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl hover:bg-teal-700">Registrar</a>
+                <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Ingresar</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Menú desplegable para pantallas pequeñas -->
+<div class="lg:hidden bg-gray-800">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+        <!-- Elementos del menú -->
+        {% if request.user.is_authenticated %}
+            {% if request.user.is_superuser %}
+                <a href="{% url 'admin:index'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Administrar</a>
+            {% endif %}
+            
+            {% if perms.rooms.add_Habitacion %}
+                <a href="{% url 'habitaciones:nuevo'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Agregar Habitación</a>
+            {% endif %}
+            {% if perms.rooms.delete_Habitacion %}
+                <a href="{% url 'habitaciones:eliminar_habitacion'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Eliminar Habitación</a>
+            {% endif %}
+
+            <a href="{% url 'habitacion:vista_reservas' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Mis Reservas</a>
+
+            <a href="{% url 'core:modificar' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Usuario</a>
+            <form action="{% url 'core:logout' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit-close" class="block w-full px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Cerrar sesión</button>
+            </form>
+        {% else %}
+            <a href="{% url 'core:signup' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Registrar</a>
+            <a href="{% url 'core:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Ingresar</a>
+        {% endif %}
+    </div>
+</div>
+
+    <!-- Contenido principal -->
+    <div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <!-- Pie de página -->
+    <footer id="myfooter" style="width: 100%;  bottom: 0; " >
+        <div class="row" style=" margin-bottom: 0;">
+            <div class="center" style="margin-top: 20px;  position: relative; bottom:-12px; "></div>
+                <a class="btn-floating btn-large waves-effect waves-light red scale-transition scale-out" onclick="toTop()">
+                    <i class="material-icons">keyboard_arrow_up</i>
+                </a>
+            </div>
+            <div class="row mycolor darken-4" style="margin-bottom: 0; padding-bottom: 0; ">
+                <div class=" s6 m8 l8">
+                    <div class="contact left">
+                        <span class="white-text" style="font-size: 16px;">
+                            © 2024 Copyright HotelEasy Inc
+                        </span>
+                        <button class="btn-flat center"></button>
+                            <a class="grey-text text-lighten-4 " href="#!" style="font-size: 16px; ">
+                                <i class="material-icons left">email</i>
+                                Contactanos
+                            </a>
+                        </button>
+                    </div>
+                </div>
+                <div class=" s12 m4 l4">
+                    <div class="social right">
+                        <a href="#" class="white-text">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                        <a href="#" class="white-text"></a>
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                        <a href="#" class="white-text"></a>
+                            <i class="fab fa-linkedin fa-2x"></i>
+                        </a>
+                        <a href="#" class="white-text">
+                            <i class="fab fa-google-plus fa-2x"></i>
+                        </a>
+                        <a href="#" class="white-text"></a>
+                            <i class="fab fa-pinterest fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+<script>
+
+
+</script>

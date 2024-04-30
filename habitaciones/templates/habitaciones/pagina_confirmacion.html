@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Confirmación{% endblock %}
+
+{% block content %}
+<div class="w-full md:w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl animate__animated animate__fadeIn">
+    <h1 class="mb-6 text-3xl text-center">Confirmación de reserva</h1>
+
+    <div class="flex items-center justify-center mb-6">
+        <img src="{{ reserva.habitacion.imagen.url }}" alt="{{ reserva.habitacion.nombre }}" class="w-full h-auto">
+    </div>
+
+    <p class="text-center">¡Tu reserva se ha realizado con éxito!</p>
+    <p class="text-center">A continuación, se muestran los detalles de tu reserva:</p>
+
+    <ul class="mt-4">
+        <li><strong>Habitación:</strong> {{ reserva.habitacion.nombre }}</li>
+        <li><strong>Fecha de inicio:</strong> {{ reserva.fecha_inicio }}</li>
+        <li><strong>Fecha de fin:</strong> {{ reserva.fecha_fin }}</li>
+        <li><strong>Número de personas:</strong> {{ reserva.num_personas }}</li>
+    </ul>
+
+    <p class="text-center">Para cualquier consulta o modificación, no dudes en contactarnos.</p>
+
+    <a href="{% url 'core:index' %}" class="block mx-auto mt-6 text-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-max">Volver al inicio</a>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5 text-3xl font-bold text-gray-800">Mis reservas</h1>
+    <div class="row">
+        {% for reserva in reservas %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow">
+                <img src="{{ reserva.habitacion.imagen.url }}" class="card-img-top" alt="{{ reserva.habitacion.nombre }}">
+                <div class="card-body">
+                    <h2 class="card-title">{{ reserva.habitacion.nombre }}</h2>
+                    <p class="card-text">Fecha de inicio: {{ reserva.fecha_inicio }}</p>
+                    <p class="card-text">Fecha de fin: {{ reserva.fecha_fin }}</p>
+                    <!-- Agregar botón para cancelar reserva -->
+                    <form action="{% url 'habitacion:cancelar_reserva' reserva.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No has realizado ninguna reserva.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
