@@ -14,15 +14,16 @@ def user_in_habitacion_permisos(user):
         return True
     return user.groups.filter(name='permisos_habitaciones').exists()
 
+
 # Vista para mostrar las habitaciones de una categoría
 def categoria(request, nombre_categoria):
-    habitaciones = Habitacion.objects.all()
+    habitaciones = Habitacion.objects.filter(categoria__nombre=nombre_categoria)
     categoria = get_object_or_404(Categoria, nombre=nombre_categoria)
-
     return render(request, "habitaciones/categoria.html", {
         'categoria': categoria,
         'habitaciones': habitaciones,
     })
+
 
 # Vista para agregar una nueva habitación
 @login_required
@@ -33,7 +34,7 @@ def nuevo_habitacion(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Habitacion guardada exitosamente')
-            return redirect('/habitaciones/nuevo')
+            return redirect('habitacion:nuevo')
         else:
             messages.error(request, 'No se pudo guardar la habitacion. Por favor, corrija los errores en el formulario.')
     else:
@@ -43,6 +44,7 @@ def nuevo_habitacion(request):
         'form': form,
         'title': 'Agregar Habitacion',
     })
+
 
 # Vista para eliminar una habitación
 @login_required
@@ -54,7 +56,7 @@ def eliminar_habitacion(request):
             habitacion = form.cleaned_data['habitacion']
             habitacion.delete()
             messages.success(request, 'Habitacion eliminada exitosamente.')
-            return redirect('rooms:eliminar_habitacion')
+            return redirect('habitacion:eliminar_habitacion')
         else:
             messages.error(request, 'Error, no se pudo eliminar el habitacion')
             categoria_id = request.POST.get("categoria")
@@ -68,18 +70,17 @@ def eliminar_habitacion(request):
         'title': 'Eliminar Habitacion',
     })
 
+
 # Vista para buscar habitaciones
 def buscar_habitaciones(request):
     query = request.GET.get('q')
-    habitaciones = Habitacion.objects.filter(
-        Q(nombre__icontains=query) | Q(descripcion__icontains=query)
-    )
-    categorias = Categoria.objects.all()
-    return render(request, 'habitaciones/busqueda.html', {
-        'habitaciones': habitaciones,
+    habitaciones = Habitacion.objects.filter(nombre__icontains=query)
+    context = {
         'query': query,
-        'categorias': categorias,
-    })
+        'habitaciones': habitaciones
+    }
+    return render(request, 'habitaciones/busqueda.html', context)
+
 
 # Vista para reservar una habitación
 @login_required
@@ -92,16 +93,18 @@ def reservar_habitacion(request, habitacion_id):
             reserva.habitacion = habitacion
             reserva.usuario = request.user
             reserva.save()
-            
+
             return redirect('habitacion:pagina_confirmacion', reserva_id=reserva.id)
     else:
         form = ReservaForm()
     return render(request, 'habitaciones/reservar_habitacion.html', {'form': form, 'habitacion_id': habitacion_id})
 
+
 # Vista para mostrar la página de confirmación de reserva
 def pagina_confirmacion(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
     return render(request, 'habitaciones/pagina_confirmacion.html', {'reserva': reserva})
+
 
 # Vista para mostrar las reservas de un usuario
 @login_required
@@ -109,15 +112,28 @@ def vista_reservas(request):
     reservas = Reserva.objects.filter(usuario=request.user)
     return render(request, 'habitaciones/reservas.html', {'reservas': reservas})
 
+
 # Vista para cancelar una reserva
 @login_required
 def cancelar_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
-    
-    if request.user == reserva.usuario:
+
+    if request.user == reserva.usuario or request.user.is_superuser:
         reserva.delete()
         messages.success(request, 'Reserva cancelada exitosamente.')
     else:
         messages.error(request, 'No tienes permiso para cancelar esta reserva.')
-    
-    return redirect('habitacion:vista_reservas')
+
+    if request.user.is_superuser:
+        return redirect('habitacion:reservas_todas')
+    else:
+        return redirect('habitacion:vista_reservas')
+
+
+# Vista para mostrar todas las reservas (solo para superusuarios)
+@login_required
+def reservas_todas(request):
+    if not request.user.is_superuser:
+        return redirect('habitacion:vista_reservas')  # Redirigir a la vista de reservas del usuario si no es un superusuario
+    reservas = Reserva.objects.all()
+    return render(request, 'habitaciones/reservas_todas.html', {'reservas': reservas})

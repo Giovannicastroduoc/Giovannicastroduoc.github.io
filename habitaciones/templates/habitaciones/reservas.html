@@ -1,28 +1,26 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1 class="mt-5 text-3xl font-bold text-gray-800">Mis reservas</h1>
-    <div class="row">
+<div class="container bg-white py-8 px-4 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Mis reservas</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for reserva in reservas %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow">
-                <img src="{{ reserva.habitacion.imagen.url }}" class="card-img-top" alt="{{ reserva.habitacion.nombre }}">
-                <div class="card-body">
-                    <h2 class="card-title">{{ reserva.habitacion.nombre }}</h2>
-                    <p class="card-text">Fecha de inicio: {{ reserva.fecha_inicio }}</p>
-                    <p class="card-text">Fecha de fin: {{ reserva.fecha_fin }}</p>
-                    <!-- Agregar botón para cancelar reserva -->
-                    <form action="{% url 'habitacion:cancelar_reserva' reserva.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
-                    </form>
-                </div>
+        <div class="rounded-xl overflow-hidden bg-white shadow-lg">
+            <img src="{{ reserva.habitacion.imagen.url }}" class="w-full h-48 object-cover object-center" alt="{{ reserva.habitacion.nombre }}">
+            <div class="p-6">
+                <h2 class="text-xl font-semibold text-gray-800">{{ reserva.habitacion.nombre }}</h2>
+                <p class="text-gray-600">Fecha de inicio: {{ reserva.fecha_inicio }}</p>
+                <p class="text-gray-600">Fecha de fin: {{ reserva.fecha_fin }}</p>
+                <p class="text-gray-600">Precio: ${{ reserva.habitacion.precio }}</p>
+                <form action="{% url 'habitacion:cancelar_reserva' reserva.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancelar Reserva</button>
+                </form>
             </div>
         </div>
         {% empty %}
         <div class="col">
-            <p>No has realizado ninguna reserva.</p>
+            <p class="text-gray-600 text-center">No has realizado ninguna reserva.</p>
         </div>
         {% endfor %}
     </div>

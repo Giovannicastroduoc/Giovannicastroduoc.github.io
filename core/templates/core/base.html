@@ -49,7 +49,7 @@
         <a href="/" class="text-xl font-semibold">HotelEasy</a>
 
         <!-- Botón del menú desplegable -->
-        <button class="lg:hidden focus:outline-none">
+        <button class="lg:hidden focus:outline-none menu-button">
             <i class="fas fa-bars text-white"></i>
         </button>
 
@@ -58,6 +58,7 @@
             {% if request.user.is_authenticated %}
                 {% if request.user.is_superuser %}
                     <a href="{% url 'admin:index'  %}" class="text-lg font-semibold hover:text-gray-500">Administrar</a>
+                    <a href="{% url 'habitacion:reservas_todas' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Todas las Reservas</a>
                 {% endif %}
                 
                 {% if perms.rooms.add_Habitacion %}
@@ -84,34 +85,35 @@
     </nav>
 
     <!-- Menú desplegable para pantallas pequeñas -->
-<div class="lg:hidden bg-gray-800">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-        <!-- Elementos del menú -->
-        {% if request.user.is_authenticated %}
-            {% if request.user.is_superuser %}
-                <a href="{% url 'admin:index'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Administrar</a>
-            {% endif %}
-            
-            {% if perms.rooms.add_Habitacion %}
-                <a href="{% url 'habitaciones:nuevo'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Agregar Habitación</a>
-            {% endif %}
-            {% if perms.rooms.delete_Habitacion %}
-                <a href="{% url 'habitaciones:eliminar_habitacion'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Eliminar Habitación</a>
-            {% endif %}
+    <div class="lg:hidden bg-gray-700">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <!-- Elementos del menú -->
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'admin:index'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Administrar</a>
+                    <a href="{% url 'habitacion:reservas_todas' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Todas las Reservas</a>
+                {% endif %}
+                                
+                {% if perms.rooms.add_Habitacion %}
+                    <a href="{% url 'habitaciones:nuevo'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Agregar Habitación</a>
+                {% endif %}
+                {% if perms.rooms.delete_Habitacion %}
+                    <a href="{% url 'habitaciones:eliminar_habitacion'  %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Eliminar Habitación</a>
+                {% endif %}
 
-            <a href="{% url 'habitacion:vista_reservas' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Mis Reservas</a>
+                <a href="{% url 'habitacion:vista_reservas' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Mis Reservas</a>
 
-            <a href="{% url 'core:modificar' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Usuario</a>
-            <form action="{% url 'core:logout' %}" method="post" class="inline">
-                {% csrf_token %}
-                <button type="submit-close" class="block w-full px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Cerrar sesión</button>
-            </form>
-        {% else %}
-            <a href="{% url 'core:signup' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Registrar</a>
-            <a href="{% url 'core:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Ingresar</a>
-        {% endif %}
+                <a href="{% url 'core:modificar' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Usuario</a>
+                <form action="{% url 'core:logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit-close" class="block w-full px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Cerrar sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'core:signup' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Registrar</a>
+                <a href="{% url 'core:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-gray-300 hover:bg-gray-700">Ingresar</a>
+            {% endif %}
+        </div>
     </div>
-</div>
 
     <!-- Contenido principal -->
     <div>
@@ -165,8 +167,3 @@
     </footer>
 </body>
 </html>
-
-<script>
-
-
-</script>

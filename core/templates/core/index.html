@@ -37,13 +37,14 @@
     <div class="container">
         <div class="row">
             <div class="col s12">
-                <h3 class="text-2xl">Buscar Hoteles</h3>
-                <form action="{% url 'habitacion:buscar_habitaciones' %}" method="GET" class="mb-8">
+                <h3 class="text-2xl">Buscar Habitacion</h3>
+                <form action="{% url 'habitaciones:buscar_habitaciones' %}" method="GET" class="mb-8">
                     <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
                         <input type="text" name="q" placeholder="Buscar habitaciones..." class="px-4 py-2 w-full focus:outline-none">
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none">Buscar</button>
                     </div>
                 </form>
+                
             </div>
         </div>
     </div>

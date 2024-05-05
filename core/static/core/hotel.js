@@ -1,8 +1,8 @@
-
-
+// Obtener el elemento con la clase 'hotel-price' y formatear su contenido como número con separador de miles
 var elem = document.querySelector('.hotel-price');
 elem.innerHTML = parseFloat(elem.innerHTML).toLocaleString();
 
+// Inicializar el slider con la clase 'slider'
 const slider = document.querySelector('.slider');
 M.Slider.init(slider, {
     indicators: true,
@@ -11,11 +11,16 @@ M.Slider.init(slider, {
     interval: 6000
 });
 
+// Obtener los elementos relacionados con el calendario
 var cal = document.querySelector('.calendar');
 var checkin = document.querySelector('.datepicker');
 var checkout = document.querySelector('.datepicker2');
+
+// Configurar las fechas mínima y máxima para el calendario
 var date = new Date();
 var maxDate = new Date(date.setMonth(date.getMonth() + 12));
+
+// Inicializar el datepicker para el checkin
 var instance = M.Datepicker.init(checkin, {
     container: cal,
     defaultDate: new Date(),
@@ -26,12 +31,12 @@ var instance = M.Datepicker.init(checkin, {
     onClose: checkDates,
 });
 
-
-
+// Calcular la fecha mínima para el checkout basada en el checkin seleccionado
 var x = new Date(document.querySelector('input[name="checkin"]').value);
 var minCheckOut = new Date(x.setDate(x.getDate() + 1));
 var maxCheckOut = new Date(date.setMonth(date.getMonth() + 12));
 
+// Inicializar el datepicker para el checkout
 var instance2 = M.Datepicker.init(checkout, {
     container: cal,
     defaultDate: minCheckOut,
@@ -39,13 +44,13 @@ var instance2 = M.Datepicker.init(checkout, {
     minDate: minCheckOut,
     maxDate: maxCheckOut,
     yearRange: [new Date().getFullYear(), new Date().getFullYear() + 1],
-
 });
 
-
+// Inicializar los elementos select
 var elems = document.querySelectorAll('select');
 M.FormSelect.init(elems, {});
 
+// Calcular el precio total basado en las opciones seleccionadas
 function createPrice() {
     var x = document.querySelector('input[name="checkin"]').value;
     var y = document.querySelector('input[name="checkout"]').value;
@@ -63,29 +68,22 @@ function createPrice() {
     document.querySelector('#days').value = days;
 }
 
+// Verificar las fechas seleccionadas y actualizar el datepicker del checkout si es necesario
 function checkDates() {
     var x = new Date(document.querySelector('input[name="checkin"]').value);
     var minCheckOut = new Date(x.setDate(x.getDate() + 1));
     var y = new Date(document.querySelector('input[name="checkout"]').value);
 
-    if (x >= y) {
-        var options = {
-            container: cal,
-            defaultDate: minCheckOut,
-            setDefaultDate: true,
-            minDate: minCheckOut,
-            maxDate: maxCheckOut,
-            yearRange: [new Date().getFullYear(), new Date().getFullYear() + 1],
-        };
+    var options = {
+        container: cal,
+        minDate: minCheckOut,
+        maxDate: maxCheckOut,
+        yearRange: [new Date().getFullYear(), new Date().getFullYear() + 1],
+    };
 
-    }
-    else {
-        var options = {
-            container: cal,
-            minDate: minCheckOut,
-            maxDate: maxCheckOut,
-            yearRange: [new Date().getFullYear(), new Date().getFullYear() + 1],
-        };
+    if (x >= y) {
+        options.defaultDate = minCheckOut;
+        options.setDefaultDate = true;
     }
 
     M.Datepicker.init(checkout, options);
@@ -93,5 +91,4 @@ function checkDates() {
     var b = `${a[1]} ${a[2]}, ${a[3]}`;
     document.querySelector('input[name="checkout"]').value = b;
     createPrice();
-
 }

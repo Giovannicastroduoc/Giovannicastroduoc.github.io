@@ -37,10 +37,3 @@ class ReservaForm(forms.ModelForm):
     fecha_fin = forms.DateField(label='Fecha de fin', widget=forms.DateInput(attrs={'type': 'date'}))
 
 
-# Formulario para buscar habitaciones
-class BuscarHabitacionesForm(forms.Form):
-    q = forms.CharField(label='Buscar habitaciones', required=False)
-    categoria = forms.ModelChoiceField(queryset=Categoria.objects.all(), empty_label='Todas las categorías', required=False)
-
-    def __str__(self):
-        return f"BuscarHabitacionesForm(q={self.cleaned_data.get('q')}, categoria={self.cleaned_data.get('categoria')})"

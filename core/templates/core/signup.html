@@ -1,13 +1,13 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title%}Registrar{% endblock %}
+{% block title %}Registrar{% endblock %}
 
 {% block content %}
     <div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl animate__animated animate__fadeIn">
         <h1 class="mb-6 text-3xl">Registro</h1>
 
-        <form id="registrationForm" method="post" action="." class="animate__animated animate__fadeInUp">
+        <form id="registrationForm" method="post" action=".">
             {% csrf_token %}
 
             <div class="mb-3">
@@ -37,7 +37,6 @@
             {% endif %}
 
             <button type="submit" name="submit" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Registrar</button>
-
         </form>
     </div>
 
@@ -46,17 +45,23 @@
         $(document).ready(function() {
             $('#registrationForm').on('submit', function(e) {
                 e.preventDefault();
-
+    
                 // Validacion de datos del formulario
                 var username = $('#id_username').val();
                 var email = $('#id_email').val();
                 var password1 = $('#id_password1').val();
                 var password2 = $('#id_password2').val();
-
+    
+                console.log('Username:', username);
+                console.log('Email:', email);
+                console.log('Password1:', password1);
+                console.log('Password2:', password2);
+    
                 if (username && email && password1 && password2) {
                     if (password1 === password2) {
-                        // Si las contraseñas coinciden, envía el formulario
-                        this.submit();
+                        console.log('Formulario válido. Enviando...');
+                        // Desactivar temporalmente el evento submit para evitar recursión infinita
+                        $(this).off('submit').submit();
                     } else {
                         alert('Las contraseñas no coinciden!');
                     }
@@ -66,4 +71,6 @@
             });
         });
     </script>
+    
+    
 {% endblock content %}
