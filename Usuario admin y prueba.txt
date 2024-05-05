@@ -1,0 +1,14 @@
+Usuario administrador:
+
+profesor
+
+abc12345678
+
+-------------------------
+
+Usuario prueba de pagina:
+
+prueba
+
+abc12345678
+
